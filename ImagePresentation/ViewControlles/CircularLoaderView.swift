@@ -11,7 +11,20 @@ final class CircularLoaderView: UIView {
     private let circularPatLayer = CAShapeLayer()
     private let circularRadius: CGFloat = 20
     
-    
+    var progress: CGFloat {
+        get {
+            circularPatLayer.strokeEnd
+        }
+        set {
+            if newValue > 1 {
+                circularPatLayer.strokeEnd = 1
+            } else if  newValue < 0 {
+                circularPatLayer.strokeEnd = 0
+            } else {
+                circularPatLayer.strokeEnd = newValue
+            }
+        }
+    }
     
     override func layoutSubviews() {
         super.layoutSubviews()
@@ -21,7 +34,7 @@ final class CircularLoaderView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
+        progress = 0
         configure()
     }
     
@@ -53,5 +66,12 @@ final class CircularLoaderView: UIView {
     //вписание круга в квадрат
     func circulaPath() -> UIBezierPath {
         UIBezierPath(ovalIn: circularFrame())
+    }
+    func reveal() {
+        backgroundColor = .clear
+        progress = 1
+        circularPatLayer.removeAnimation(forKey: "strokeEnd")
+        circularPatLayer.removeFromSuperlayer()
+        superview?.layer.mask = circularPatLayer
     }
 }

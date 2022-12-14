@@ -39,7 +39,7 @@ class ViewController: UIViewController {
             customImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             customImageView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             customImageView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.9),
-            customImageView.widthAnchor.constraint(equalToConstant: 600)
+            customImageView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.9)
         ])
     }
 

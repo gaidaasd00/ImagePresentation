@@ -73,5 +73,42 @@ final class CircularLoaderView: UIView {
         circularPatLayer.removeAnimation(forKey: "strokeEnd")
         circularPatLayer.removeFromSuperlayer()
         superview?.layer.mask = circularPatLayer
+        
+        //
+        let center = CGPoint(x: bounds.midX, y: bounds.midY)
+        let finalRadius = sqrt((center.x * center.x) + (center.y * center.y))
+        let radiusInset = finalRadius - circularRadius
+        let outerRect = circularFrame().insetBy(dx: -radiusInset, dy: -radiusInset)
+        let toPath = UIBezierPath(ovalIn: outerRect).cgPath
+        
+        let fromPath = circularPatLayer.path
+        let fromLineWidth = circularPatLayer.lineWidth
+        
+        CATransaction.begin()
+        CATransaction.setValue(kCFBooleanTrue, forKeyPath: kCATransactionDisableActions)
+        circularPatLayer.lineWidth = 2 * finalRadius
+        circularPatLayer.path = toPath
+        CATransaction.commit()
+        
+        let lineWidthAnimation = CABasicAnimation(keyPath: "lineWidth")
+        lineWidthAnimation.fromValue = fromLineWidth
+        lineWidthAnimation.toValue = 2 * finalRadius
+        let pathAnimation  = CABasicAnimation(keyPath: "path")
+        pathAnimation.fromValue = fromPath
+        pathAnimation.toValue = toPath
+        
+        let groupAnimation = CAAnimationGroup()
+        groupAnimation.duration = 1
+        groupAnimation.timingFunction = CAMediaTimingFunction(name: .easeIn)
+        groupAnimation.animations = [pathAnimation, lineWidthAnimation]
+        groupAnimation.delegate = self
+        circularPatLayer.add(groupAnimation, forKey: "strokeWidth")
+        
+    }
+}
+
+extension CircularLoaderView: CAAnimationDelegate {
+    func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
+        superview?.layer.mask = nil
     }
 }

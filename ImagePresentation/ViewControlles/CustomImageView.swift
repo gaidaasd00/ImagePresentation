@@ -49,7 +49,7 @@ extension CustomImageView: URLSessionDownloadDelegate {
             self.progressIndicatorView.reveal()
         }
     }
-    
+    //urlsession
     func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
         let progress = totalBytesWritten / totalBytesExpectedToWrite
         DispatchQueue.main.async {
